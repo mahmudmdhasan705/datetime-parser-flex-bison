@@ -1,0 +1,83 @@
+# =====================================================================
+#  test_cases.txt  -  Test input for the Date and Time Expression Parser
+#  Run with:  ./datetime_parser test_cases.txt
+#  Lines starting with # are comments and are ignored by the lexer.
+# =====================================================================
+
+# ---------------------------- VALID TESTS ----------------------------
+
+# V1: valid leap year date (2024 is divisible by 4)            -> VALID
+DATE 29-02-2024
+
+# V2: valid date written with '/' separators                    -> VALID
+DATE 15/08/2025
+
+# V3: valid 12-hour time with PM                                -> VALID
+TIME 10:30 PM
+
+# V4: valid 24-hour time                                        -> VALID
+TIME 23:45
+
+# V5: valid 24-hour time with seconds                           -> VALID
+TIME 08:05:59
+
+# V6: valid combined date-time (24-hour)                        -> VALID
+DATE 31-12-2025 TIME 23:45
+
+# V7: valid combined date-time (12-hour, time first)            -> VALID
+TIME 12:00 AM DATE 01-01-2000
+
+# V8: valid century leap year (divisible by 400)                -> VALID
+DATE 29-02-2000
+
+# --------------------------- INVALID TESTS ---------------------------
+
+# I1: invalid leap year date (2025 is not a leap year)          -> INVALID
+DATE 29-02-2025
+
+# I2: invalid day (April has only 30 days)                      -> INVALID
+DATE 31-04-2025
+
+# I3: invalid month (13)                                        -> INVALID
+DATE 12-13-2025
+
+# I4: invalid day (31 February)                                 -> INVALID
+DATE 31-02-2025
+
+# I5: invalid 12-hour time (hour 13 with PM)                    -> INVALID
+TIME 13:30 PM
+
+# I6: invalid 24-hour time (hour 25 and minute 70)              -> INVALID
+TIME 25:70
+
+# I7: invalid combined date-time (bad date, good time)          -> INVALID
+DATE 30-02-2024 TIME 10:30 AM
+
+# I8: 1900 is not a leap year (divisible by 100, not by 400)    -> INVALID
+DATE 29-02-1900
+
+# I9: invalid minutes in a 12-hour time                         -> INVALID
+TIME 09:75 AM
+
+# ------------------- SYNTAX AND LEXICAL ERRORS -----------------------
+
+# E1: mixed separators ('-' then '/')                           -> SYNTAX ERROR
+DATE 12-05/2025
+
+# E2: missing the year                                          -> SYNTAX ERROR
+DATE 12-05
+
+# E3: unknown character '@'                                     -> LEXICAL ERROR
+DATE 12@05@2025
+
+# E4: missing the minutes part                                  -> SYNTAX ERROR
+TIME 10:
+
+# E5: expression does not start with DATE or TIME               -> SYNTAX ERROR
+29-02-2024
+
+# E6: wrong number of digits (year must have 4 digits)          -> INVALID
+DATE 12-05-25
+
+# E7: AM/PM written but hour is 0 (12-hour clock starts at 1)   -> INVALID
+TIME 00:30 AM
